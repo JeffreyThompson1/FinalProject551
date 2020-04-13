@@ -1,25 +1,24 @@
-# Project 1
+# Final Project
 
 ENGO 551 Project 1
+Sebastian Mcgonigle *[Student ID]*
 Jeffrey Thompson 30021871
 
 The project is contained in the following folders:
-
-import.py - python script written to upload the book data from the provided books.csv into the SQL database
 
 application.py - main python script handling the creation of the flask server, the contents of the webpages, and the interactions between the webpage and the SQL database
 
 templates - a folder of .html files used alongside application.py to provide formats to the website
 
-layouts.html - base .html files that extends to all other files, providing formatting and styling specifications.
+            layouts.html - base .html files that extends to all other files, providing formatting and styling specifications.
 
-index.html - The introductory webpage, handles logging in and registering to the website, as well as provides an Welcome page after logging in
+            index.html - The introductory webpage, handles logging in and registering to the website, as well as provides an Welcome page after logging in
 
-search.html - after entering a query into the searchbar, this page shows the results of the query, i.e. all books in the database matching the query
+            search.html - after entering a query into the searchbar, this page shows the results of the query, i.e. all books in the database matching the query
 
-book.html - after a book is selected from the search page, the book webpage opens to show information and reviews on the selected book, as well as providing space for a user to input their own review of the book
+            book.html - after a book is selected from the search page, the book webpage opens to show information and reviews on the selected book, as well as providing space for a user to input their own review of the book
 
-error.html - The error page handled all situations that may have proved problematic for the nature of the script. It redirects to the welcome page.
+            error.html - The error page handled all situations that may have proved problematic for the nature of the script. It redirects to the welcome page.
 
 Database Information:
 Host        ec2-3-234-109-123.compute-1.amazonaws.com
