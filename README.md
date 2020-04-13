@@ -20,15 +20,47 @@ templates - a folder of .html files used alongside application.py to provide for
 
             error.html - The error page handled all situations that may have proved problematic for the nature of the script. It redirects to the welcome page.
 
-Database Information:
-Host        ec2-3-234-109-123.compute-1.amazonaws.com
-Database    dcg1phll5jsck3
-User        yxglmjgpfdpdds
-Port        5432
-Password    29d1c599fdb113d5d001ac58da80cd32ffd8870cc98ed67d6
-            3d0df1bc9185f60
-URI         postgres://     yxglmjgpfdpdds:29d1c599fdb113d5d001ac58da80cd32ffd8870cc98ed67d63d0df1bc9185f60@ec2-3-234-109-123.compute-1.amazonaws.com:5432/dcg1phll5jsck3
-Heroku CLI  heroku pg:psql postgresql-graceful-07672 --app engo551lab1jeff
+HEROKU DATABASE: 
+
+Host 
+
+ec2-3-223-21-106.compute-1.amazonaws.com 
+
+  
+
+Database 
+
+dbl2cg6nng3q61 
+
+  
+
+User 
+
+nrzfbmbyrfuiiv 
+
+  
+
+Port 
+
+5432 
+
+  
+
+Password 
+
+bcf70f112a5c78fda0451689f2228006e08b08f976780950d889a94fd2737e5b 
+
+  
+
+URI 
+
+postgres://nrzfbmbyrfuiiv:bcf70f112a5c78fda0451689f2228006e08b08f976780950d889a94fd2737e5b@ec2-3-223-21-106.compute-1.amazonaws.com:5432/dbl2cg6nng3q61 
+
+  
+
+Heroku CLI 
+
+heroku pg:psql postgresql-encircled-05629 --app map-project-551 
 
 GoodReads Information:
 key: 9LYdPW0XgC6gZkiQV8Aevg
