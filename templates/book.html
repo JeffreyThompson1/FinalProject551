@@ -1,0 +1,53 @@
+{% extends "layouts.html" %}
+
+{% block title %}
+{% endblock %}
+
+{% block body %}
+
+    {% for book in book %}
+        <h1>Book: {{ book.title }} </h1>
+
+        <h3>Book Info</h3>
+        <p> Title: {{ book.title }} </p>
+        <p> Author: {{ book.author }} </p>
+        <p> Year of Publication: {{ book.year }} </p>
+        <p> ISBN: {{ book.isbn }} </p>
+        {% for rev in data %}
+            <p> Number of Ratings: {{ rev["work_ratings_count"] }} </p>   
+            <p> Average Rating: {{ rev["average_rating"] }} </p>
+        {% endfor %}
+
+        <h3> Reviews </h3>
+        {% if revs.rowcount==0 %}
+            <h4>There are no Reviews for this Book Yet.</h4>
+        {% else %}
+            <ul>
+                {% for l in revs %}
+                <li> {{ l.username }}: {{ l.rating }} </li>
+                <p> {{ l.opinion }}</p> 
+                {% endfor %}
+            </ul>
+        {% endif %}
+    
+
+    <br>
+    <form action="{{ url_for('review', code=book.isbn) }}" method="POST">
+        <input type="text" name="rating" placeholder="Rating (/5)">
+        <input type="text" name="opinion" placeholder="comments/opinions">   <br>
+        <input type="submit"    value="Submit Review">
+    </form>
+    {% endfor %}
+
+    <br>
+    <br>
+    <a href="{{ url_for('index') }}"> Return to Home </a>
+
+    <br>
+    <br>
+    <div style="vertical-align: bottom;">
+        <form action="{{ url_for('logout') }}" method="POST">
+            <input type="submit" value="Logout">
+        </form>
+    </div>  
+{% endblock %}

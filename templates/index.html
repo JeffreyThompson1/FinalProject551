@@ -1,0 +1,48 @@
+{% extends "layouts.html" %}
+
+{% block title %}
+    Book Review Website
+{% endblock %}
+
+{% block body %}
+    <h1>Welcome to the Book Review Website!</h1>
+    
+    {% if login %}
+        <h3>Hello, {{ user }}</h3>
+
+        <h4>Search for a Book to Review:</h4>
+        <form action="{{ url_for('search') }}" method="POST">
+            <input type="text" name="book_id"   placeholder="ISBN">    
+            <input type="text" name="title"     placeholder="Book Title"> 
+            <input type="text" name="author"    placeholder="Author">       <br>
+            <button>Search</button>
+        </form>
+
+        <br>
+        <div style="vertical-align: bottom;">
+            <form action="{{ url_for('logout') }}" method="POST">
+                <input type="submit" value="Logout">
+            </form>
+        </div>
+        
+
+    {% else %}
+        <h3>Please Login or Register</h3>
+        
+        <h4>Login:</h4>
+        <form action="{{ url_for('login') }}" method="POST">
+            <input type="text"  name="username"  placeholder="Username" id="user">      <br>
+            <input type="text"  name="password"  placeholder="Password" id="password">  <br>
+            <button>Login</button>
+        </form>
+        
+        <h4>Register:</h4>
+        <form action="{{ url_for('register') }}" method="POST">
+            <input type="text"  name="email"    placeholder="Email"     id="email" >    <br>
+            <input type="text"  name="username" placeholder="Username"  id="user" >     <br>
+            <input type="text"  name="password" placeholder="Password"  id="password">  <br>
+            <input type="text"  name="confirm"  placeholder="Confirm Password">         <br>
+            <button>Register</button>
+        </form>
+    {% endif %}
+{% endblock %}
