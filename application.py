@@ -23,14 +23,22 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    #Checks if User Has Logged In
-    if session.get("user") is None:
-        session["user"] = ""
+    if request.method == "GET":
+        #Checks if User Has Logged In
+        if session.get("user") is None:
+            session["user"] = ""
 
-    login = True
-    if session.get("user") == "":
-        login = False
+        login = True
+        if session.get("user") == "":
+            login = False
 
+        return render_template("index.html", login=login, user=session["user"])
+    
+@app.route("/status", methods=["POST"])
+def status():
+    #Change User Status
+    db.execute("UPDATE users SET status = :status WHERE username = :user", {"status": request.form.get("status"), "user": session.get("user")})
+    db.commit()
     return render_template("index.html", login=login, user=session["user"])
 
 @app.route("/login", methods=["POST"])
@@ -56,7 +64,7 @@ def register():
     elif not request.form.get("password") == request.form.get("confirm"):
         return render_template("error.html", message="Password does not match Password Confirmation.")
     else:
-        db.execute("INSERT INTO users (email, username, password) VALUES (:email, :user, :pwrd)", {"email": request.form.get("email"), "user": request.form.get("username"), "pwrd": request.form.get("password")})
+        db.execute("INSERT INTO users (email, username, password, status) VALUES (:email, :user, :pwrd, :stat)", {"email": request.form.get("email"), "user": request.form.get("username"), "pwrd": request.form.get("password"), "stat": ""})
         db.commit()
         session["user"] = request.form.get("username")
         session["user_id"] = db.execute("SELECT id FROM users WHERE username=:user AND password=:pwrd LIMIT 1", {"user": request.form.get("username"), "pwrd": request.form.get("password")}).fetchall()
@@ -130,6 +138,7 @@ def book_api(code):
                 "Number of Ratings":    rev["work_ratings_count"],
                 "Average Rating":       rev["average_rating"]
         })
+
 
 if __name__ == "__main__":
     index()

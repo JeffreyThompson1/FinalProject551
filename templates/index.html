@@ -1,14 +1,23 @@
 {% extends "layouts.html" %}
 
 {% block title %}
-    Book Review Website
+    Tinder For Gamers
 {% endblock %}
 
 {% block body %}
-    <h1>Welcome to the Book Review Website!</h1>
+    <h1>Welcome to the Local Game Finder!</h1>
     
     {% if login %}
         <h3>Hello, {{ user }}</h3>
+
+        <form action="{{ url_for('status') }}" method="POST">
+            <div class="form-group">
+                <input type="radio" id="host" name="status" value="host"> Host
+                <input type="radio" id="player" name="status" value="player">Player
+                <input type="radio" id="both" name="status" value="both"> both <br>
+                <input type="submit"  value="submit">
+            </div>
+        </form>
 
         <h4>Search for a Book to Review:</h4>
         <form action="{{ url_for('search') }}" method="POST">
