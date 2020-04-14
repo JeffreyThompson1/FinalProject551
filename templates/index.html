@@ -1,4 +1,4 @@
-{% extends "layouts.html" %}
+ {% extends "layouts.html" %}
 
 {% block title %}
     Tinder For Gamers
@@ -19,11 +19,11 @@
             </div>
         </form>
 
-        <h4>Search for a Book to Review:</h4>
+        <h4>Search for a Game to Play:</h4>
         <form action="{{ url_for('search') }}" method="POST">
-            <input type="text" name="book_id"   placeholder="ISBN">    
-            <input type="text" name="title"     placeholder="Book Title"> 
-            <input type="text" name="author"    placeholder="Author">       <br>
+            <input type="text" name="book_id"   placeholder="Game Title">    
+            <input type="text" name="title"     placeholder="Search Origin"> 
+            <input type="text" name="author"    placeholder="Search Radius">       <br>
             <button>Search</button>
         </form>
 
@@ -34,6 +34,25 @@
             </form>
         </div>
         
+        <!--MAP-->
+        <div id="mapid"></div>
+
+        <script type="text/javascript">
+            //Java Script - Mapping Application
+
+            //MapboxGL access token
+            mapboxgl.accessToken = 'pk.eyJ1Ijoic2ViYXNpYW5tYXBwZXIiLCJhIjoiY2s3bmw2d2V6MDE0NTNtcDZkano3NDNuaiJ9.4PhNi66A_sAecq8EBHsqyQ';
+
+            // New map
+            var map = new mapboxgl.Map({
+                container: 'mapid',
+                style: 'mapbox://styles/mapbox/dark-v10', //stylesheet location
+                center: [-114.0719, 51.0447],//calgary coordinates
+                zoom: 10
+            });
+
+            //add map layers here
+        </script>
 
     {% else %}
         <h3>Please Login or Register</h3>
