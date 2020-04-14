@@ -1,5 +1,17 @@
 # Final Project
 
+Pulling and Pushing to Git:
+
+make sure you have pull from the github repository "git pull <url>"
+            
+git add .
+
+git commit -m "[COMMIT MESSAGE]"
+
+git push origin master
+
+
+
 ENGO 551 Project 1
 Sebastian Mcgonigle *[Student ID]*
 Jeffrey Thompson 30021871
