@@ -1,5 +1,11 @@
 # Final Project
 
+Setting up Flask:
+
+"source ./flaskrunner.sh"
+
+"flask run"
+
 Pulling and Pushing to Git:
 
 make sure you have pull from the github repository "git pull <url>"
