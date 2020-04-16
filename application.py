@@ -37,9 +37,16 @@ def index():
 @app.route("/status", methods=["POST"])
 def status():
     #Change User Status
-    db.execute("UPDATE users SET status = :status WHERE username = :user", {"status": request.form.get("status"), "user": session.get("user")})
+    stat = request.form.get("status")
+    db.execute("UPDATE users SET status = :status WHERE username = :user", {"status": stat, "user": session.get("user")})
+    host = False
+    player = False
+    if stat == "host" or stat == "both":
+        host = True
+    if stat == "player" or stat == "both":
+        player = True
     db.commit()
-    return render_template("index.html", login=login, user=session["user"])
+    return render_template("index.html", login=login, user=session["user"], host=host, player=player)
 
 @app.route("/login", methods=["POST"])
 def login():

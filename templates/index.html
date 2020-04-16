@@ -26,15 +26,19 @@
                             <input type="radio" id="host" name="status" value="host"> Host
                             <input type="radio" id="player" name="status" value="player">Player
                             <input type="radio" id="both" name="status" value="both"> both <br>
-                            <input type="submit"  value="submit">
+                            <input type="radio" id="board" name="gametype" value="board"> Board Games
+                            <input type="radio" id="video" name="gametype" value="video">Video Games
+                            <br><input type="submit"  value="submit">
                         </div>
                     </form>
               </div>
               <div class="col-sm">
+                {% if player %}
                     <h4>Search for a Game to Play:</h4>
                     <form action="{{ url_for('search') }}" method="POST">
                         <input type="text" name="genre"   placeholder="Game Genre">    
                         <input type="text" name="title"     placeholder="Search Title">
+                        <br>
                         <label for="searchradius">Search Radius</label>
                         <select name="radius" id="searchradius">
                             <option value="1">1km</option>
@@ -44,9 +48,13 @@
                         </select>
                         <button>Search</button>
                     </form>
+                {% endif %}
               </div>
               <div class="col-sm">
-                <h4>Nothing, Yet</h4>
+                {% if host %}
+                    <!--Will have Event Creation Data-->
+                    <h4>Event Maker</h4>
+                {% endif %}
               </div>
             </div>
         </div>
