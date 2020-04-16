@@ -10,30 +10,48 @@
     {% if login %}
         <h3>Hello, {{ user }}</h3>
 
-        <form action="{{ url_for('status') }}" method="POST">
-            <div class="form-group">
-                <input type="radio" id="host" name="status" value="host"> Host
-                <input type="radio" id="player" name="status" value="player">Player
-                <input type="radio" id="both" name="status" value="both"> both <br>
-                <input type="submit"  value="submit">
-            </div>
-        </form>
-
-        <h4>Search for a Game to Play:</h4>
-        <form action="{{ url_for('search') }}" method="POST">
-            <input type="text" name="book_id"   placeholder="Game Title">    
-            <input type="text" name="title"     placeholder="Search Origin"> 
-            <input type="text" name="author"    placeholder="Search Radius">       <br>
-            <button>Search</button>
-        </form>
-
         <br>
-        <div style="vertical-align: bottom;">
+        <div style="vertical-align: top; text-align: right;">
             <form action="{{ url_for('logout') }}" method="POST">
                 <input type="submit" value="Logout">
             </form>
         </div>
         
+        <div class="container">
+            <div class="row">
+              <div class="col-sm">
+                  <h4>Select Your User Status</h4>
+                    <form action="{{ url_for('status') }}" method="POST">
+                        <div class="form-group">
+                            <input type="radio" id="host" name="status" value="host"> Host
+                            <input type="radio" id="player" name="status" value="player">Player
+                            <input type="radio" id="both" name="status" value="both"> both <br>
+                            <input type="submit"  value="submit">
+                        </div>
+                    </form>
+              </div>
+              <div class="col-sm">
+                    <h4>Search for a Game to Play:</h4>
+                    <form action="{{ url_for('search') }}" method="POST">
+                        <input type="text" name="genre"   placeholder="Game Genre">    
+                        <input type="text" name="title"     placeholder="Search Title">
+                        <label for="searchradius">Search Radius</label>
+                        <select name="radius" id="searchradius">
+                            <option value="1">1km</option>
+                            <option value="2">2km</option>
+                            <option value="5">5km</option>
+                            <option value="10">10km</option>
+                        </select>
+                        <button>Search</button>
+                    </form>
+              </div>
+              <div class="col-sm">
+                <h4>Nothing, Yet</h4>
+              </div>
+            </div>
+        </div>
+        <br>
+
         <!--MAP-->
         <div id="mapid"></div>
 

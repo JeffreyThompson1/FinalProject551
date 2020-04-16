@@ -7,11 +7,18 @@
 {% block body %}
     <h1>Search</h1>
 
-    <h4>Search for a Book to Review:</h4>
+    <h4>Search for a Game to Play:</h4>
     <form action="{{ url_for('search') }}" method="POST">
-        <input type="text" name="book_id"   placeholder="ISBN">  
-        <input type="text" name="title"     placeholder="Book Title"> 
-        <input type="text" name="author"    placeholder="Author">       <br>
+        <input type="text" name="genre"   placeholder="Game Genre">    
+        <input type="text" name="title"     placeholder="Search Title"> <br>
+        <label for="searchradius">Search Radius</label>
+        <select name="radius" id="searchradius">
+            <option value="1">1km</option>
+            <option value="2">2km</option>
+            <option value="5">5km</option>
+            <option value="10">10km</option>
+        </select>
+        <br><br>
         <button>Search</button>
     </form>
 

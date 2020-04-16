@@ -78,12 +78,13 @@ def logout():
     login = False
     return render_template("index.html", login=login, user=session["user"])
    
+#We Can Modify this code to search for events in the database
 @app.route("/search", methods=["POST"])
 def search():
-    book_id = "%" + request.form.get("book_id") + "%"
+    genre = "%" + request.form.get("genre") + "%"
     title = "%" + request.form.get("title") + "%"
-    author = "%" + request.form.get("author") + "%"
-    items = db.execute("SELECT * FROM books WHERE isbn LIKE :id AND title LIKE :title AND author LIKE :author ", {"id": book_id, "title": title, "author": author}).fetchall()
+    radius = "%" + request.form.get("radius") + "%"
+    items = db.execute("SELECT * FROM events WHERE genre LIKE :genre AND title LIKE :title AND radius LIKE :radius ", {"radius": genre, "title": title, "author": radius}).fetchall()
     return render_template("search.html", user=session["user"], items=items)   
 
 @app.route("/book/<string:code>", methods=["GET", "POST"])
