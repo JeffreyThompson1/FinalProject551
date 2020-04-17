@@ -107,12 +107,34 @@
                 document.getElementById("lon2").value = e.latlng.lng;
             }
             mymap.on('click', onMapClick);
-
+            
             //if {{search}}:
+<<<<<<< HEAD
                 var rad = {{rad}} * 1000;
                 var lat = {{lat}};
                 var lon = {{lon}};
                 var searchrad = L.circle([lat, lon], {color: "red", radius: rad}).addTo(mymap);
+=======
+            var rad = {{rad}} * 1000;
+            var lat = {{ulat}};
+            var lon = {{ulon}};
+            var searchrad = L.circle([lat, lon], {color: "red", radius: rad}).addTo(mymap);
+            // Search radius selects events
+            var pot = {{events}};
+            function searched(pot){
+
+                for(let i=0; i<pot.features.length; i++){
+                    var from = turf.point([ pot[i].lat, pot[i].long ]);//event
+                    var to = turf.point([ {{ulat}}, {{ulon}} ]);//user
+                    var options = {units: 'meters'};
+                    var distance = turf.distance(from, to, options);
+                    alert("good")
+                    if (distance < {{rad}}*1000) {
+                        alert("better")
+                    }
+                }       
+            }
+>>>>>>> f32f7364ea68dbe76b6812d041343fa8a3345ad9
 
         </script>
 
