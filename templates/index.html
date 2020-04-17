@@ -1,4 +1,4 @@
- {% extends "layouts.html" %}
+{% extends "layouts.html" %}
 
 {% block title %}
     Tinder For Gamers
@@ -10,7 +10,7 @@
     {% if login %}
         <div class="container" style="max-height: 80%; min-height: 80%;">
             <div class="row">
-                <div class="col-sm"></div>
+                <div class="col-sm"><h6>* - Mandatory Fields</h6></div>
                 <div class="col-sm"><h3>Hello, {{ user }}</h3></div>
                 <div class="col-sm"><form action="{{ url_for('logout') }}" method="POST"><input type="submit" value="Logout"></form></div>
             </div>
@@ -19,30 +19,30 @@
                     <h4>Set Your User Status</h4>
                         <form action="{{ url_for('status') }}" method="POST">
                             <div class="form-group">
-                                {% if host and not player %} <input type="radio" id="host" name="status" value="host" checked> Host
+                                {% if status == 'host' %} <input type="radio" id="host" name="status" value="host" checked> Host
                                 {% else %} <input type="radio" id="host" name="status" value="host"> Host {% endif %}
-                                {% if player and not host %} <input type="radio" id="player" name="status" value="player" checked>Player
+                                {% if status == 'player' %} <input type="radio" id="player" name="status" value="player" checked>Player
                                 {% else %} <input type="radio" id="player" name="status" value="player"> Player {% endif %}
-                                {% if host and player %}<input type="radio" id="both" name="status" value="both" checked> Both 
-                                {% else %} <input type="radio" id="both" name="status" value="both"> Both {% endif %}
+                                {% if status == 'both' %}<input type="radio" id="both" name="status" value="both" checked> Both 
+                                {% else %} <input type="radio" id="both" name="status" value="both"> Both {% endif %} *
                                 <br>
-                                {% if gametype %} <input type="radio" id="board" name="gametype" value=0 checked>Board Games
-                                {% else %} <input type="radio" id="board" name="gametype" value=0> Board Games {% endif %}
-                                {% if not gametype %} <input type="radio" id="video" name="gametype" value=1 checked>Video Games
-                                {% else %} <input type="radio" id="video" name="gametype" value=1>Video Games {% endif %}
+                                {% if gametype == 'board' %} <input type="radio" id="board" name="gametype" value="board" checked>Board Games
+                                {% else %} <input type="radio" id="board" name="gametype" value="board"> Board Games {% endif %}
+                                {% if gametype == 'video' %} <input type="radio" id="video" name="gametype" value="video" checked>Video Games
+                                {% else %} <input type="radio" id="video" name="gametype" value="video">Video Games {% endif %}
                                 <br><input type="submit"  value="Submit">
                             </div>
                         </form>
-                    {% if player %}
+                    {% if status == 'player' or status == 'both' %}
                         <h4>Search for a Game to Play:</h4>
                         <form action="{{ url_for('search') }}" method="POST">
-                            Select a Location on the Map <br> 
+                            Select a Location on the Map* <br> 
                             <input type="text" id="lat" name="lat" value=0 hidden>
                             <input type="text" id="lon" name="lon" value=0 hidden>
                             <input type="text" name="genre"   placeholder="Game Genre"> <br>
                             <input type="text" name="title"     placeholder="Search Title"> <br>
                             <select name="radius" id="searchradius" aria-placeholder="Search Radius">
-                                <option value="" selected disabled hidden>Search Radius</option>
+                                <option value="" selected disabled hidden>Search Radius*</option>
                                 <option value=1>1km</option>
                                 <option value=2>2km</option>
                                 <option value=5>5km</option>
@@ -51,16 +51,19 @@
                             <button>Search</button>
                         </form>
                     {% endif %}
-                    {% if host %}
+                    {% if status == 'host' or status == 'both' %}
                         <!--Will have Event Creation Data-->
                         <h4>Event Maker:</h4>
-                        <form action="{{ url_for('search') }}" method="POST">
-                            Select a Location on the Map <br>
-                            <input type="text" name="event"   placeholder="Event name"> <br>
-                            <input type="text" name="hostgame"     placeholder="Game Being Hosted"> <br>
-                            <input type="radio" name="locationprivacy" value="private"> Private
-                            <input type="radio" name="locationprivacy" value="public"> Public
-                            <button>Host</button>
+                        <form action="{{ url_for('create') }}" method="POST">
+                            Select a Location on the Map* <br>
+                            <input type="text" id="lat2" name="lat" value=0 hidden>
+                            <input type="text" id="lon2" name="lon" value=0 hidden>
+                            <input type="text" name="name"   placeholder="Event Name*"> <br>
+                            <input type="text" name="genre"   placeholder="Genre"> <br>
+                            <input type="number" name="capacity"   placeholder="Capacity" min=1 step=1> <br>
+                            <input type="radio" name="locationprivacy" value=False checked> Private
+                            <input type="radio" name="locationprivacy" value=True> Public
+                            *<button>Host</button>
                         </form>
                     {% endif %} <br>
                 </div>
@@ -100,8 +103,8 @@
                     .openOn(mymap);
                 document.getElementById("lat").value = e.latlng.lat;
                 document.getElementById("lon").value = e.latlng.lng;
-
-
+                document.getElementById("lat2").value = e.latlng.lat;
+                document.getElementById("lon2").value = e.latlng.lng;
             }
             mymap.on('click', onMapClick);
 

@@ -27,12 +27,12 @@ def index():
         #Checks if User Has Logged In
         if session.get("user") is None:
             session["user"] = ""
-
         login = True
         if session.get("user") == "":
             login = False
-
-        return render_template("index.html", login=login, user=session["user"], location="")
+        if session.get("status") is None:
+            session["status"] = ""
+        return render_template("index.html", login=login, user=session["user"], location="", status=session["status"])
     
 @app.route("/login", methods=["POST"])
 def login():
@@ -76,46 +76,40 @@ def logout():
 def status():
     stat = request.form.get("status")
     db.execute("UPDATE users SET status = :status WHERE username = :user", {"status": stat, "user": session.get("user")})
-    session["status"] = stat  
-    host = False
-    player = False
-    if stat == "host" or stat == "both":
-        host = True
-    if stat == "player" or stat == "both":
-        player = True
     db.commit()
-    gametype = True
-    if request.form.get("gametype")=="0":
-        gametype = True
-    else:
-        gametype = False
+    session["status"] = stat
+    gametype = request.form.get("gametype")
     session["gametype"] = gametype
-    return render_template("index.html", login=login, user=session["user"], host=host, player=player, gametype=session["gametype"], ulat=0, ulon=0, rad=0)
+    return render_template("index.html", login=login, user=session["user"], status=session["status"], gametype=session["gametype"], ulat=0, ulon=0, rad=0)
 
 #We Can Modify this code to search for events in the database
 @app.route("/search", methods=["POST"])
 def search():
     user = session.get("user")
-    stat = session["status"]
     genre = request.form.get("genre")
     title = request.form.get("title")
     radius = request.form.get("radius")
     lat = request.form.get("lat")
     lon = request.form.get("lon")
     radius = request.form.get("radius")
-    host = False
-    player = False
-    if stat == "host" or stat == "both":
-        host = True
-    if stat == "player" or stat == "both":
-        player = True
-    return render_template("index.html", login=True, user=user, host=host, player=player, gametype=session["gametype"], ulat=lat, ulon=lon, rad=radius)   
+    return render_template("index.html", login=True, user=session["user"], status=session["status"], gametype=session["gametype"], ulat=lat, ulon=lon, rad=radius)   
 
-""" @app.route("/create", methods=["POST"])
+
+@app.route("/create", methods=["POST"])
 def create():
-    db.execute("INSERT")
-    db.commit
-    render_template """
+    user = session.get("user")
+    name = request.form.get("name")
+    genre = request.form.get("genre")
+    lat = request.form.get("lat2")
+    lon = request.form.get("lon2")
+    cap = request.form.get("capacity")
+    public = request.form.get("public")
+    gametype = session["gametype"]
+    if name == "" or lat == 0 or lon == 0 or public == "":
+        return render_template("error.html", message="Please Fill In All Required Fields.")
+    db.execute("INSERT INTO events (title, genre, lat, long, capacity, privacy, gametype, creator) VALUES (:title, :genre, :lat, :lon, :cap, :public, :gametype, :user)", {"title": name, "genre": genre, "lat": lat, "lon": lon, "cap": cap, "public": public, "gametype": gametype, "user": session["user"]})
+    db.commit()
+    return render_template("index.html", login=True, user=user, status=session["status"], gametype=session["gametype"], ulat=lat, ulon=lon, rad=0)
 
 if __name__ == "__main__":
     index()
