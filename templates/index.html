@@ -36,11 +36,11 @@
                     {% if player %}
                         <h4>Search for a Game to Play:</h4>
                         <form action="{{ url_for('search') }}" method="POST">
+                            Select a Location on the Map <br>
                             <input type="text" name="genre"   placeholder="Game Genre"> <br>
                             <input type="text" name="title"     placeholder="Search Title"> <br>
-                            <input type="text" name="address" placeholder="Select Location on Map"> <br>
-                            <label for="searchradius">Search Radius</label>
-                            <select name="radius" id="searchradius">
+                            <select name="radius" id="searchradius" aria-placeholder="Search Radius">
+                                <option value="" selected disabled hidden>Search Radius</option>
                                 <option value=1>1km</option>
                                 <option value=2>2km</option>
                                 <option value=5>5km</option>
@@ -53,9 +53,9 @@
                         <!--Will have Event Creation Data-->
                         <h4>Event Maker:</h4>
                         <form action="{{ url_for('search') }}" method="POST">
+                            Select a Location on the Map <br>
                             <input type="text" name="event"   placeholder="Event name"> <br>
                             <input type="text" name="hostgame"     placeholder="Game Being Hosted"> <br>
-                            <input type="text" name="location" placeholder="Select Location on map"> <br>
                             <input type="radio" name="locationprivacy" value="private"> Private
                             <input type="radio" name="locationprivacy" value="public"> Public
                             <button>Host</button>
@@ -70,7 +70,6 @@
 
 
         <script type="text/javascript">
-            alert("{{user}}\n {{location}}\n {{host}}\n {{player}}")
             //Java Script - Mapping Application
 
             //MapboxGL access token
@@ -87,12 +86,10 @@
             //add map layers here
             
             //Setting User's Location and Search Radius
-            var rad = document.getElementById("searchradius");
-            alert(rad)
-            var marker = new L.marker([-114.0719, 51.0447]).addTo(map);
-            alert("added a marker");
+            var rad = {{radius}};
+            alert(rad);
 
-            //var searchrad = new L.circle([-114.0719, 51.0447], {radius: rad});
+
 
         </script>
 

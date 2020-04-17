@@ -34,27 +34,6 @@ def index():
 
         return render_template("index.html", login=login, user=session["user"], location="")
     
-@app.route("/status", methods=["POST"])
-def status():
-    #Change User Status
-    stat = request.form.get("status")
-    db.execute("UPDATE users SET status = :status WHERE username = :user", {"status": stat, "user": session.get("user")})
-    session["status"] = stat  
-    host = False
-    player = False
-    if stat == "host" or stat == "both":
-        host = True
-    if stat == "player" or stat == "both":
-        player = True
-    db.commit()
-    gametype = True
-    if request.form.get("gametype")=="0":
-        gametype = True
-    else:
-        gametype = False
-    session["gametype"] = gametype
-    return render_template("index.html", login=login, user=session["user"], host=host, player=player, location="", gametype=session["gametype"])
-
 @app.route("/login", methods=["POST"])
 def login():
     if request.form.get("username") == "" or request.form.get("password") == "":
@@ -91,15 +70,36 @@ def logout():
     session["user_id"] = ""
     login = False
     return render_template("index.html", login=login, user=session["user"])
-   
+
+#Change User Status
+@app.route("/status", methods=["POST"])
+def status():
+    stat = request.form.get("status")
+    db.execute("UPDATE users SET status = :status WHERE username = :user", {"status": stat, "user": session.get("user")})
+    session["status"] = stat  
+    host = False
+    player = False
+    if stat == "host" or stat == "both":
+        host = True
+    if stat == "player" or stat == "both":
+        player = True
+    db.commit()
+    gametype = True
+    if request.form.get("gametype")=="0":
+        gametype = True
+    else:
+        gametype = False
+    session["gametype"] = gametype
+    return render_template("index.html", login=login, user=session["user"], host=host, player=player, location="", gametype=session["gametype"])
+
 #We Can Modify this code to search for events in the database
 @app.route("/search", methods=["POST"])
 def search():
     user = session.get("user")
     stat = session["status"]
-    genre = "%" + request.form.get("genre") + "%"
-    title = "%" + request.form.get("title") + "%"
-    radius = "%" + request.form.get("radius") + "%"   
+    genre = request.form.get("genre")
+    title = request.form.get("title")
+    radius = request.form.get("radius")
     address = request.form.get("address")
     radius = request.form.get("radius")
     host = False
@@ -109,60 +109,6 @@ def search():
     if stat == "player" or stat == "both":
         player = True
     return render_template("index.html", login=True, user=user, radius=radius, host=host, player=player, location="", gametype=session["gametype"])   
-
-@app.route("/book/<string:code>", methods=["GET", "POST"])
-def book(code):
-    fullcode = code.zfill(10)
-    print(fullcode)
-    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "9LYdPW0XgC6gZkiQV8Aevg", "isbns": fullcode})
-    data = res.json()["books"]
-    book = db.execute("SELECT * FROM books WHERE isbn = :isbn LIMIT 1", {"isbn": code}).fetchall()
-    revs = db.execute("SELECT rating, opinion, username FROM reviews JOIN users ON reviews.user_id = users.id WHERE book_id = :isbn", {"isbn": code})    
-    if len(book) == 0:
-        return render_template("error.html", message="No Book Selected Somehow")
-    return render_template("book.html", user=session["user"], book=book, data=data, revs=revs)   
-
-@app.route("/review/<string:code>", methods=["POST"])
-def review(code):
-    if request.form.get("rating")=="" or request.form.get("opinion")=="":
-        return render_template("error.html", message="Incomplete Review Submitted")
-    match = db.execute("SELECT * FROM reviews WHERE user_id=:user AND book_id=:isbn", {"user": session.get("user_id"), "isbn": code}).fetchall() 
-    if  len(match) > 0:
-        db.execute("UPDATE reviews SET rating = :rating, opinion = :opinion WHERE book_id = :isbn AND user_id = :user", {"isbn": code, "user": session.get("user_id"), "rating": int(request.form.get("rating")), "opinion": request.form.get("opinion")})
-    else:
-        db.execute("INSERT INTO reviews (book_id, user_id, rating, opinion) VALUES (:isbn, :user, :rating, :opinion)", {"isbn": code, "user": session.get("user_id"), "rating": int(request.form.get("rating")), "opinion": request.form.get("opinion")})
-    db.commit()
-    fullcode = code.zfill(10)
-    print(fullcode)
-    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "9LYdPW0XgC6gZkiQV8Aevg", "isbns": fullcode})
-    data = res.json()["books"]
-    book = db.execute("SELECT * FROM books WHERE isbn = :isbn LIMIT 1", {"isbn": code}).fetchall()
-    revs = db.execute("SELECT rating, opinion, username FROM reviews JOIN users ON reviews.user_id = users.id WHERE book_id = :isbn", {"isbn": code})    
-    if len(book) == 0:
-        return render_template("error.html", message="No Book Selected Somehow")
-    return render_template("book.html", user=session["user"], book=book, data=data, revs=revs)
-
-
-@app.route("/api/<string:code>")
-def book_api(code):
-    fullcode = code.zfill(10)
-    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "9LYdPW0XgC6gZkiQV8Aevg", "isbns": fullcode, "format": "json"})
-    data = res.json()["books"]
-    book = db.execute("SELECT * FROM books WHERE isbn = :isbn LIMIT 1", {"isbn": code}).fetchall() 
-    if len(book)==0:
-        return jsonify({"error": "Invalid Book ISBN"}), 404
-
-    for bk in book: 
-        for rev in data:
-            return jsonify({
-                "ISBN":                 bk.isbn,
-                "Title":                bk.title,
-                "Author":               bk.author,
-                "Year":                 bk.year,
-                "Number of Ratings":    rev["work_ratings_count"],
-                "Average Rating":       rev["average_rating"]
-        })
-
 
 if __name__ == "__main__":
     index()
