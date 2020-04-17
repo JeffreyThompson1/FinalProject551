@@ -129,6 +129,20 @@
             }       
 
 
+            const list2 = {{locale|safe}}
+            alert(list2); console.log(list2)
+            
+            for(let i=0; i<list2.length; i++){
+                var marker = L.marker([list2[i].lat, list2[i].long]).addTo(mymap);
+                if(list2[i].video){
+                    marker.bindPopup('<b>'+ list2[i].Title +'</b><br>Capacity: '+ list2[i].Capacity +'<br>Video Games');
+                }else if(list2[i].board){
+                    marker.bindPopup('<b>'+ list2[i].Title +'</b><br>Capacity: '+ list2[i].Capacity +'<br>Board Games');
+                }else{
+                    marker.bindPopup('<b>'+ list2[i].Title +'</b><br>Capacity: '+ list2[i].Capacity +'<br>Video & Board Games');
+                }
+            }
+
         </script>
 
     {% else %}
