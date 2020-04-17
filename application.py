@@ -32,7 +32,9 @@ def index():
             login = False
         if session.get("status") is None:
             session["status"] = ""
-        return render_template("index.html", login=login, user=session["user"], location="", status=session["status"])
+        if session.get("gametype") is None:
+            session["gametype"] = ""
+        return render_template("index.html", login=login, user=session["user"], location="", status=session["status"], gametype=session["gametype"], lat=0, lon=0, rad=0)
     
 @app.route("/login", methods=["POST"])
 def login():
@@ -80,7 +82,7 @@ def status():
     session["status"] = stat
     gametype = request.form.get("gametype")
     session["gametype"] = gametype
-    return render_template("index.html", login=login, user=session["user"], status=session["status"], gametype=session["gametype"], ulat=0, ulon=0, rad=0)
+    return render_template("index.html", login=login, user=session["user"], status=session["status"], gametype=session["gametype"], lat=0, lon=0, rad=0)
 
 #We Can Modify this code to search for events in the database
 @app.route("/search", methods=["POST"])
@@ -92,7 +94,7 @@ def search():
     lat = request.form.get("lat")
     lon = request.form.get("lon")
     radius = request.form.get("radius")
-    return render_template("index.html", login=True, user=session["user"], status=session["status"], gametype=session["gametype"], ulat=lat, ulon=lon, rad=radius)   
+    return render_template("index.html", login=True, user=session["user"], status=session["status"], gametype=session["gametype"], lat=lat, lon=lon, rad=radius)   
 
 
 @app.route("/create", methods=["POST"])
@@ -109,7 +111,7 @@ def create():
         return render_template("error.html", message="Please Fill In All Required Fields.")
     db.execute("INSERT INTO events (title, genre, lat, long, capacity, privacy, gametype, creator) VALUES (:title, :genre, :lat, :lon, :cap, :public, :gametype, :user)", {"title": name, "genre": genre, "lat": lat, "lon": lon, "cap": cap, "public": public, "gametype": gametype, "user": session["user"]})
     db.commit()
-    return render_template("index.html", login=True, user=user, status=session["status"], gametype=session["gametype"], ulat=lat, ulon=lon, rad=0)
+    return render_template("index.html", login=True, user=user, status=session["status"], gametype=session["gametype"], lat=lat, lon=lon, rad=0)
 
 if __name__ == "__main__":
     index()
