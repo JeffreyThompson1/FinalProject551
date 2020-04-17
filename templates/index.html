@@ -76,23 +76,29 @@
             //MapboxGL access token
             mapboxgl.accessToken = 'pk.eyJ1Ijoic2ViYXNpYW5tYXBwZXIiLCJhIjoiY2s3bmw2d2V6MDE0NTNtcDZkano3NDNuaiJ9.4PhNi66A_sAecq8EBHsqyQ';
 
-            // New map
-            var map = new mapboxgl.Map({
-                container: 'mapid',
-                style: 'mapbox://styles/mapbox/dark-v10', //stylesheet location
-                center: [-114.0719, 51.0447],//calgary coordinates
+            // Create Map
+            var mymap = L.map('mapid').setView([51.0447, -114.0719], 10);
+
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 18,
+                id: 'mapbox/dark-v10',
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: mapboxgl.accessToken,
+                center: [51.0447, -114.0719],//calgary coordinates
                 zoom: 10
-            });
+            }).addTo(mymap);
 
-            //add map layers here
-            
-            //Setting User's Location and Search Radius
-            var rad = document.getElementById("searchradius");
-            alert(rad)
-            var marker = new L.marker([-114.0719, 51.0447]).addTo(map);
-            alert("added a marker");
-
-            //var searchrad = new L.circle([-114.0719, 51.0447], {radius: rad});
+            //Insert marker when user clicks on map
+            var popup = L.popup();
+            function onMapClick(e) {
+                popup
+                    .setLatLng(e.latlng)
+                    .setContent("Your Location: " + e.latlng.toString())
+                    .openOn(mymap);
+            }
+            mymap.on('click', onMapClick);
 
         </script>
 
