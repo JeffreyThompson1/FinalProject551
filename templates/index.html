@@ -8,62 +8,69 @@
     <h1>Welcome to the Local Game Finder!</h1>
     
     {% if login %}
-        <h3>Hello, {{ user }}</h3>
-
-        <br>
-        <div style="vertical-align: top; text-align: right;">
-            <form action="{{ url_for('logout') }}" method="POST">
-                <input type="submit" value="Logout">
-            </form>
-        </div>
-        
-        <div class="container">
+        <div class="container" style="max-height: 80%; min-height: 80%;">
             <div class="row">
-              <div class="col-sm">
-                  <h4>Select Your User Status</h4>
-                    <form action="{{ url_for('status') }}" method="POST">
-                        <div class="form-group">
-                            <input type="radio" id="host" name="status" value="host"> Host
-                            <input type="radio" id="player" name="status" value="player">Player
-                            <input type="radio" id="both" name="status" value="both"> both <br>
-                            <input type="radio" id="board" name="gametype" value="board"> Board Games
-                            <input type="radio" id="video" name="gametype" value="video">Video Games
-                            <br><input type="submit"  value="submit">
-                        </div>
-                    </form>
-              </div>
-              <div class="col-sm">
-                {% if player %}
-                    <h4>Search for a Game to Play:</h4>
-                    <form action="{{ url_for('search') }}" method="POST">
-                        <input type="text" name="genre"   placeholder="Game Genre">    
-                        <input type="text" name="title"     placeholder="Search Title">
-                        <br>
-                        <label for="searchradius">Search Radius</label>
-                        <select name="radius" id="searchradius">
-                            <option value="1">1km</option>
-                            <option value="2">2km</option>
-                            <option value="5">5km</option>
-                            <option value="10">10km</option>
-                        </select>
-                        <button>Search</button>
-                    </form>
-                {% endif %}
-              </div>
-              <div class="col-sm">
-                {% if host %}
-                    <!--Will have Event Creation Data-->
-                    <h4>Event Maker</h4>
-                {% endif %}
-              </div>
+                <div class="col-sm"></div>
+                <div class="col-sm"><h3>Hello, {{ user }}</h3></div>
+                <div class="col-sm"><form action="{{ url_for('logout') }}" method="POST"><input type="submit" value="Logout"></form></div>
+            </div>
+            <div class="row">    
+                <div class="col">
+                    <h4>Set Your User Status</h4>
+                        <form action="{{ url_for('status') }}" method="POST">
+                            <div class="form-group">
+                                {% if host and not player %} <input type="radio" id="host" name="status" value="host" checked> Host
+                                {% else %} <input type="radio" id="host" name="status" value="host"> Host {% endif %}
+                                {% if player and not host %} <input type="radio" id="player" name="status" value="player" checked>Player
+                                {% else %} <input type="radio" id="player" name="status" value="player"> Player {% endif %}
+                                {% if host and player %}<input type="radio" id="both" name="status" value="both" checked> Both 
+                                {% else %} <input type="radio" id="both" name="status" value="both"> Both {% endif %}
+                                <br>
+                                {% if gametype %} <input type="radio" id="board" name="gametype" value=0 checked>Board Games
+                                {% else %} <input type="radio" id="board" name="gametype" value=0> Board Games {% endif %}
+                                {% if not gametype %} <input type="radio" id="video" name="gametype" value=1 checked>Video Games
+                                {% else %} <input type="radio" id="video" name="gametype" value=1>Video Games {% endif %}
+                                <br><input type="submit"  value="Submit">
+                            </div>
+                        </form>
+                    {% if player %}
+                        <h4>Search for a Game to Play:</h4>
+                        <form action="{{ url_for('search') }}" method="POST">
+                            <input type="text" name="genre"   placeholder="Game Genre"> <br>
+                            <input type="text" name="title"     placeholder="Search Title"> <br>
+                            <input type="text" name="address" placeholder="Select Location on Map"> <br>
+                            <label for="searchradius">Search Radius</label>
+                            <select name="radius" id="searchradius">
+                                <option value=1>1km</option>
+                                <option value=2>2km</option>
+                                <option value=5>5km</option>
+                                <option value=10>10km</option>
+                            </select> <br>
+                            <button>Search</button>
+                        </form>
+                    {% endif %}
+                    {% if host %}
+                        <!--Will have Event Creation Data-->
+                        <h4>Event Maker:</h4>
+                        <form action="{{ url_for('search') }}" method="POST">
+                            <input type="text" name="event"   placeholder="Event name"> <br>
+                            <input type="text" name="hostgame"     placeholder="Game Being Hosted"> <br>
+                            <input type="text" name="location" placeholder="Select Location on map"> <br>
+                            <input type="radio" name="locationprivacy" value="private"> Private
+                            <input type="radio" name="locationprivacy" value="public"> Public
+                            <button>Host</button>
+                        </form>
+                    {% endif %} <br>
+                </div>
+                <div class="col-8">
+                    <div id="mapid"></div>           
+                </div>
             </div>
         </div>
-        <br>
 
-        <!--MAP-->
-        <div id="mapid"></div>
 
         <script type="text/javascript">
+            alert("{{user}}\n {{location}}\n {{host}}\n {{player}}")
             //Java Script - Mapping Application
 
             //MapboxGL access token
@@ -78,6 +85,15 @@
             });
 
             //add map layers here
+            
+            //Setting User's Location and Search Radius
+            var rad = document.getElementById("searchradius");
+            alert(rad)
+            var marker = new L.marker([-114.0719, 51.0447]).addTo(map);
+            alert("added a marker");
+
+            //var searchrad = new L.circle([-114.0719, 51.0447], {radius: rad});
+
         </script>
 
     {% else %}

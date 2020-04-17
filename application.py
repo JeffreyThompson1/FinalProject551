@@ -32,13 +32,14 @@ def index():
         if session.get("user") == "":
             login = False
 
-        return render_template("index.html", login=login, user=session["user"])
+        return render_template("index.html", login=login, user=session["user"], location="")
     
 @app.route("/status", methods=["POST"])
 def status():
     #Change User Status
     stat = request.form.get("status")
     db.execute("UPDATE users SET status = :status WHERE username = :user", {"status": stat, "user": session.get("user")})
+    session["status"] = stat  
     host = False
     player = False
     if stat == "host" or stat == "both":
@@ -46,7 +47,13 @@ def status():
     if stat == "player" or stat == "both":
         player = True
     db.commit()
-    return render_template("index.html", login=login, user=session["user"], host=host, player=player)
+    gametype = True
+    if request.form.get("gametype")=="0":
+        gametype = True
+    else:
+        gametype = False
+    session["gametype"] = gametype
+    return render_template("index.html", login=login, user=session["user"], host=host, player=player, location="", gametype=session["gametype"])
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -88,11 +95,20 @@ def logout():
 #We Can Modify this code to search for events in the database
 @app.route("/search", methods=["POST"])
 def search():
+    user = session.get("user")
+    stat = session["status"]
     genre = "%" + request.form.get("genre") + "%"
     title = "%" + request.form.get("title") + "%"
-    radius = "%" + request.form.get("radius") + "%"
-    items = db.execute("SELECT * FROM events WHERE genre LIKE :genre AND title LIKE :title AND radius LIKE :radius ", {"radius": genre, "title": title, "author": radius}).fetchall()
-    return render_template("search.html", user=session["user"], items=items)   
+    radius = "%" + request.form.get("radius") + "%"   
+    address = request.form.get("address")
+    radius = request.form.get("radius")
+    host = False
+    player = False
+    if stat == "host" or stat == "both":
+        host = True
+    if stat == "player" or stat == "both":
+        player = True
+    return render_template("index.html", login=True, user=user, radius=radius, host=host, player=player, location="", gametype=session["gametype"])   
 
 @app.route("/book/<string:code>", methods=["GET", "POST"])
 def book(code):
