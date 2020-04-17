@@ -1,0 +1,30 @@
+*{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+body{
+    background-color: goldenrod;
+}
+
+.form-group{
+    text-align: center;
+}
+
+.head{
+    color: black;
+    text-align:center;
+}
+
+.btn{
+    border-color:black;
+    border-width:1px;
+}
+
+.form-input{
+    border-color:black;
+    border-width: 1Px;
+    text-align: center;
+}
+
+#title{
+    font-weight: bold;
+}
