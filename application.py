@@ -100,8 +100,11 @@ def search():
     radius = request.form.get("radius")
     if lat == "0" or lon == "0" or radius is None:
         return render_template("error.html", message="Please Fill In All Required Fields.")
-    events = db.execute("SELECT * FROM events WHERE title LIKE :title OR genre LIKE :genre", {"title": title, "genre": genre}).fetchall()
-    return render_template("index.html", login=True, user=session["user"], status=session["status"], gametype=session["gametype"], lat=lat, lon=lon, rad=radius, events=json.dumps([(dict(row.items())) for row in events]))   
+    reply1 = db.execute("SELECT * FROM events WHERE title LIKE :title OR genre LIKE :genre", {"title": title, "genre": genre}).fetchall()
+    events = json.dumps([(dict(row.items())) for row in reply1])
+    reply2 = db.execute("SELECT * FROM locations").fetchall()
+    locale = json.dumps([(dict(row.items())) for row in reply2])
+    return render_template("index.html", login=True, user=session["user"], status=session["status"], gametype=session["gametype"], lat=lat, lon=lon, rad=radius, events=events, locale=locale)   
 
 
 @app.route("/create", methods=["POST"])
