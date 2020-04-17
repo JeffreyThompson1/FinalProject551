@@ -120,10 +120,10 @@ def create():
     user = session.get("user")
     name = request.form.get("name")
     genre = request.form.get("genre")
-    lat = request.form.get("lat2")
-    lon = request.form.get("lon2")
+    lat = request.form.get("lat")
+    lon = request.form.get("lon")
     cap = request.form.get("capacity")
-    public = request.form.get("public")
+    public = request.form.get("locationprivacy")
     gametype = session["gametype"]
     if name == "" or lat == "0" or lon == "0" or public == "":
         return render_template("error.html", message="Please Fill In All Required Fields.")
