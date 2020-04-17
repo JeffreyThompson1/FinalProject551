@@ -116,24 +116,18 @@
             var searchrad = L.circle([lat, lon], {color: "red", radius: rad}).addTo(mymap);
 
             const list = {{events|safe}}
-            alert(list); console.log(list)
-            
-            
+            console.log(list);           
             // Search radius selects events
-            /*var pot = {{events}};
-            alert(pot);
-            pot.then(function(){
-                for(let i=0; i<pot.length; i++){
-                    var from = turf.point([ pot[i].lat, pot[i].long ]);//event
-                    var to = turf.point([lat, lon]);//user
-                    var options = {units: 'meters'};
-                    var distance = turf.distance(from, to, options);
-                    alert("good")
-                    if (distance < rad*1000) {
-                        alert("better")
-                    }
-                }       
-            }); */
+            for(let i=0; i<list.length; i++){
+                var from = turf.point([list[i].lat, list[i].long]);//event
+                var to = turf.point([lat, lon]);//user
+                var options = {units: 'meters'};
+                var distance = turf.distance(from, to, options);
+                if (distance < rad) {
+                    L.marker([list[i].lat, list[i].long]).bindPopup(list[i].title + "\n" + list[i].creator).addTo(mymap);
+                }
+            }       
+
 
         </script>
 
