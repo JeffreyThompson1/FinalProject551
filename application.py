@@ -90,7 +90,7 @@ def status():
     else:
         gametype = False
     session["gametype"] = gametype
-    return render_template("index.html", login=login, user=session["user"], host=host, player=player, location="", gametype=session["gametype"])
+    return render_template("index.html", login=login, user=session["user"], host=host, player=player, gametype=session["gametype"], ulat=0, ulon=0, rad=0)
 
 #We Can Modify this code to search for events in the database
 @app.route("/search", methods=["POST"])
@@ -100,7 +100,8 @@ def search():
     genre = request.form.get("genre")
     title = request.form.get("title")
     radius = request.form.get("radius")
-    address = request.form.get("address")
+    lat = request.form.get("lat")
+    lon = request.form.get("lon")
     radius = request.form.get("radius")
     host = False
     player = False
@@ -108,7 +109,13 @@ def search():
         host = True
     if stat == "player" or stat == "both":
         player = True
-    return render_template("index.html", login=True, user=user, radius=radius, host=host, player=player, location="", gametype=session["gametype"])   
+    return render_template("index.html", login=True, user=user, host=host, player=player, gametype=session["gametype"], ulat=lat, ulon=lon, rad=radius)   
+
+""" @app.route("/create", methods=["POST"])
+def create():
+    db.execute("INSERT")
+    db.commit
+    render_template """
 
 if __name__ == "__main__":
     index()
