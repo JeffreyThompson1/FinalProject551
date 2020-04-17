@@ -40,7 +40,11 @@ def index():
             session["status"] = ""
         if session.get("gametype") is None:
             session["gametype"] = ""
-        return render_template("index.html", login=login, user=session["user"], location="", status=session["status"], gametype=session["gametype"], lat=0, lon=0, rad=0)
+        reply1 = db.execute("SELECT * FROM events LIMIT 0").fetchall()
+        events = json.dumps([(dict(row.items())) for row in reply1])
+        reply2 = db.execute("SELECT * FROM locations").fetchall()
+        locale = json.dumps([(dict(row.items())) for row in reply2])
+        return render_template("index.html", login=login, user=session["user"], location="", status=session["status"], gametype=session["gametype"], lat=0, lon=0, rad=0, events=events, locale=locale)
     
 @app.route("/login", methods=["POST"])
 def login():
@@ -88,7 +92,11 @@ def status():
     session["status"] = stat
     gametype = request.form.get("gametype")
     session["gametype"] = gametype
-    return render_template("index.html", login=login, user=session["user"], status=session["status"], gametype=session["gametype"], lat=0, lon=0, rad=0, events="nata")
+    reply1 = db.execute("SELECT * FROM events LIMIT 0").fetchall()
+    events = json.dumps([(dict(row.items())) for row in reply1])
+    reply2 = db.execute("SELECT * FROM locations").fetchall()
+    locale = json.dumps([(dict(row.items())) for row in reply2])
+    return render_template("index.html", login=login, user=session["user"], status=session["status"], gametype=session["gametype"], lat=0, lon=0, rad=0, events=events, locale=locale)
 
 #We Can Modify this code to search for events in the database
 @app.route("/search", methods=["POST"])
@@ -121,7 +129,11 @@ def create():
         return render_template("error.html", message="Please Fill In All Required Fields.")
     db.execute("INSERT INTO events (title, genre, lat, long, capacity, privacy, gametype, creator) VALUES (:title, :genre, :lat, :lon, :cap, :public, :gametype, :user)", {"title": name, "genre": genre, "lat": lat, "lon": lon, "cap": cap, "public": public, "gametype": gametype, "user": session["user"]})
     db.commit()
-    return render_template("index.html", login=True, user=user, status=session["status"], gametype=session["gametype"], lat=lat, lon=lon, rad=0)
+    reply1 = db.execute("SELECT * FROM events LIMIT 0").fetchall()
+    events = json.dumps([(dict(row.items())) for row in reply1])
+    reply2 = db.execute("SELECT * FROM locations").fetchall()
+    locale = json.dumps([(dict(row.items())) for row in reply2])
+    return render_template("index.html", login=True, user=user, status=session["status"], gametype=session["gametype"], lat=lat, lon=lon, rad=0, events=events, locale=locale)
 
 if __name__ == "__main__":
     index()

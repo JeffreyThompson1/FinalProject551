@@ -115,8 +115,7 @@
             var lon = {{lon}};
             var searchrad = L.circle([lat, lon], {color: "red", radius: rad}).addTo(mymap);
 
-            const list = {{events|safe}}
-            console.log(list);           
+            const list = {{events|safe}};        
             // Search radius selects events
             for(let i=0; i<list.length; i++){
                 var from = turf.point([list[i].lat, list[i].long]);//event
@@ -128,9 +127,8 @@
                 }
             }       
 
-
             const list2 = {{locale|safe}}
-            alert(list2); console.log(list2)
+            console.log(list2)
             
             for(let i=0; i<list2.length; i++){
                 var marker = L.marker([list2[i].lat, list2[i].long]).addTo(mymap);
