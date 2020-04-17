@@ -1,5 +1,6 @@
 import os
 import requests
+import json
 
 from flask import Flask, session, render_template, request, jsonify
 from flask_session import Session
@@ -20,6 +21,11 @@ Session(app)
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
+
+""" #testing serializing
+class User:
+   def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns} """
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -82,20 +88,20 @@ def status():
     session["status"] = stat
     gametype = request.form.get("gametype")
     session["gametype"] = gametype
-    return render_template("index.html", login=login, user=session["user"], status=session["status"], gametype=session["gametype"], ulat=0, ulon=0, rad=0, events="nata")
+    return render_template("index.html", login=login, user=session["user"], status=session["status"], gametype=session["gametype"], lat=0, lon=0, rad=0, events="nata")
 
 #We Can Modify this code to search for events in the database
 @app.route("/search", methods=["POST"])
 def search():
-    user = session.get("user")
     genre = "%" + request.form.get("genre") + "%"
     title = "%" + request.form.get("title") + "%"
-    radius = request.form.get("radius")
     lat = request.form.get("lat")
     lon = request.form.get("lon")
     radius = request.form.get("radius")
+    if lat == "0" or lon == "0" or radius is None:
+        return render_template("error.html", message="Please Fill In All Required Fields.")
     events = db.execute("SELECT * FROM events WHERE title LIKE :title OR genre LIKE :genre", {"title": title, "genre": genre}).fetchall()
-    return render_template("index.html", login=True, user=session["user"], status=session["status"], gametype=session["gametype"], ulat=lat, ulon=lon, rad=radius, events=events)   
+    return render_template("index.html", login=True, user=session["user"], status=session["status"], gametype=session["gametype"], lat=lat, lon=lon, rad=radius, events=json.dumps([(dict(row.items())) for row in events]))   
 
 
 @app.route("/create", methods=["POST"])
@@ -108,7 +114,7 @@ def create():
     cap = request.form.get("capacity")
     public = request.form.get("public")
     gametype = session["gametype"]
-    if name == "" or lat == 0 or lon == 0 or public == "":
+    if name == "" or lat == "0" or lon == "0" or public == "":
         return render_template("error.html", message="Please Fill In All Required Fields.")
     db.execute("INSERT INTO events (title, genre, lat, long, capacity, privacy, gametype, creator) VALUES (:title, :genre, :lat, :lon, :cap, :public, :gametype, :user)", {"title": name, "genre": genre, "lat": lat, "lon": lon, "cap": cap, "public": public, "gametype": gametype, "user": session["user"]})
     db.commit()

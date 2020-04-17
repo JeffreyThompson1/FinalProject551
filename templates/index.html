@@ -47,6 +47,7 @@
                                 <option value=2>2km</option>
                                 <option value=5>5km</option>
                                 <option value=10>10km</option>
+                                <option value=15>15km</option>
                             </select> <br>
                             <button>Search</button>
                         </form>
@@ -109,32 +110,30 @@
             mymap.on('click', onMapClick);
             
             //if {{search}}:
-<<<<<<< HEAD
-                var rad = {{rad}} * 1000;
-                var lat = {{lat}};
-                var lon = {{lon}};
-                var searchrad = L.circle([lat, lon], {color: "red", radius: rad}).addTo(mymap);
-=======
-            var rad = {{rad}} * 1000;
-            var lat = {{ulat}};
-            var lon = {{ulon}};
+            var rad = {{rad}}*1000;
+            var lat = {{lat}};
+            var lon = {{lon}};
             var searchrad = L.circle([lat, lon], {color: "red", radius: rad}).addTo(mymap);
-            // Search radius selects events
-            var pot = {{events}};
-            function searched(pot){
 
-                for(let i=0; i<pot.features.length; i++){
+            const list = {{events|safe}}
+            alert(list); console.log(list)
+            
+            
+            // Search radius selects events
+            /*var pot = {{events}};
+            alert(pot);
+            pot.then(function(){
+                for(let i=0; i<pot.length; i++){
                     var from = turf.point([ pot[i].lat, pot[i].long ]);//event
-                    var to = turf.point([ {{ulat}}, {{ulon}} ]);//user
+                    var to = turf.point([lat, lon]);//user
                     var options = {units: 'meters'};
                     var distance = turf.distance(from, to, options);
                     alert("good")
-                    if (distance < {{rad}}*1000) {
+                    if (distance < rad*1000) {
                         alert("better")
                     }
                 }       
-            }
->>>>>>> f32f7364ea68dbe76b6812d041343fa8a3345ad9
+            }); */
 
         </script>
 
