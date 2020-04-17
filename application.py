@@ -108,8 +108,18 @@ def search():
     radius = request.form.get("radius")
     if lat == "0" or lon == "0" or radius is None:
         return render_template("error.html", message="Please Fill In All Required Fields.")
-    reply1 = db.execute("SELECT * FROM events WHERE title LIKE :title OR genre LIKE :genre", {"title": title, "genre": genre}).fetchall()
-    events = json.dumps([(dict(row.items())) for row in reply1])
+    if request.form.get("genre") == "" and request.form.get("title") == "":
+        reply1 = db.execute("SELECT * FROM events").fetchall()
+        events = json.dumps([(dict(row.items())) for row in reply1])
+    elif request.form.get("genre") == "":
+        reply1 = db.execute("SELECT * FROM events WHERE title LIKE :title", {"title": title}).fetchall()
+        events = json.dumps([(dict(row.items())) for row in reply1])
+    elif request.form.get("title") == "":
+        reply1 = db.execute("SELECT * FROM events WHERE genre LIKE :genre", {"genre": genre}).fetchall()
+        events = json.dumps([(dict(row.items())) for row in reply1])   
+    else:
+        reply1 = db.execute("SELECT * FROM events WHERE title LIKE :title OR genre LIKE :genre", {"title": title, "genre": genre}).fetchall()
+        events = json.dumps([(dict(row.items())) for row in reply1])
     reply2 = db.execute("SELECT * FROM locations").fetchall()
     locale = json.dumps([(dict(row.items())) for row in reply2])
     return render_template("index.html", login=True, user=session["user"], status=session["status"], gametype=session["gametype"], lat=lat, lon=lon, rad=radius, events=events, locale=locale)   
