@@ -114,24 +114,28 @@
             var lat = {{lat}};
             var lon = {{lon}};
             var searchrad = L.circle([lat, lon], {color: "red", radius: rad}).addTo(mymap);
-
-            const list = {{events|safe}};        
+            
             // Search radius selects events
+            const list = {{events|safe}};        
+            var eventIcon = L.icon({iconUrl: "https://img.icons8.com/office/16/000000/party-baloons.png", iconSize: [16, 16]});
+
             for(let i=0; i<list.length; i++){
                 var from = turf.point([list[i].lat, list[i].long]);//event
                 var to = turf.point([lat, lon]);//user
                 var options = {units: 'meters'};
                 var distance = turf.distance(from, to, options);
                 if (distance < rad) {
-                    L.marker([list[i].lat, list[i].long]).bindPopup('<b>'+ list[i].title +'</b><br>Host: '+ list[i].creator +'<br>Domain: '+ list[i].privacy).addTo(mymap);
+                    L.marker([list[i].lat, list[i].long], {icon: eventIcon})
+                        .bindPopup('<b>'+ list[i].title +'</b><br>Host: '+ list[i].creator +'<br>Domain: '+ list[i].privacy)
+                        .addTo(mymap);
                 }
             }       
 
             const list2 = {{locale|safe}}
-            console.log(list2)
+            var locationIcon = L.icon({iconUrl: "https://img.icons8.com/dusk/64/000000/controller.png", iconSize: [16, 16]});
             
             for(let i=0; i<list2.length; i++){
-                var marker = L.marker([list2[i].lat, list2[i].long]).addTo(mymap);
+                var marker = L.marker([list2[i].lat, list2[i].long], {icon: locationIcon}).addTo(mymap);
                 if(list2[i].video){
                     marker.bindPopup('<b>'+ list2[i].Title +'</b><br>Capacity: '+ list2[i].Capacity +'<br>Video Games');
                 }else if(list2[i].board){
