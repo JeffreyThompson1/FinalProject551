@@ -123,7 +123,7 @@
                 var options = {units: 'meters'};
                 var distance = turf.distance(from, to, options);
                 if (distance < rad) {
-                    L.marker([list[i].lat, list[i].long]).bindPopup(list[i].title + "\n" + list[i].creator).addTo(mymap);
+                    L.marker([list[i].lat, list[i].long]).bindPopup('<b>'+ list[i].title +'</b><br>Host: '+ list[i].creator +'<br>Domain: '+ list[i].privacy).addTo(mymap);
                 }
             }       
 
