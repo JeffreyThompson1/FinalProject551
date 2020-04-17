@@ -75,13 +75,8 @@
             //MapboxGL access token
             mapboxgl.accessToken = 'pk.eyJ1Ijoic2ViYXNpYW5tYXBwZXIiLCJhIjoiY2s3bmw2d2V6MDE0NTNtcDZkano3NDNuaiJ9.4PhNi66A_sAecq8EBHsqyQ';
 
-            // New map
-            var map = new mapboxgl.Map({
-                container: 'mapid',
-                style: 'mapbox://styles/mapbox/dark-v10', //stylesheet location
-                center: [-114.0719, 51.0447],//calgary coordinates
-                zoom: 10
-            });
+            // Create Map
+            var mymap = L.map('mapid').setView([51.0447, -114.0719], 10);
 
             //add map layers here
             
