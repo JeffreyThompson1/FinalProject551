@@ -80,19 +80,20 @@ def status():
     session["status"] = stat
     gametype = request.form.get("gametype")
     session["gametype"] = gametype
-    return render_template("index.html", login=login, user=session["user"], status=session["status"], gametype=session["gametype"], ulat=0, ulon=0, rad=0)
+    return render_template("index.html", login=login, user=session["user"], status=session["status"], gametype=session["gametype"], ulat=0, ulon=0, rad=0, events="nata")
 
 #We Can Modify this code to search for events in the database
 @app.route("/search", methods=["POST"])
 def search():
     user = session.get("user")
-    genre = request.form.get("genre")
-    title = request.form.get("title")
+    genre = "%" + request.form.get("genre") + "%"
+    title = "%" + request.form.get("title") + "%"
     radius = request.form.get("radius")
     lat = request.form.get("lat")
     lon = request.form.get("lon")
     radius = request.form.get("radius")
-    return render_template("index.html", login=True, user=session["user"], status=session["status"], gametype=session["gametype"], ulat=lat, ulon=lon, rad=radius)   
+    events = db.execute("SELECT * FROM events WHERE title LIKE :title OR genre LIKE :genre", {"title": title, "genre": genre}).fetchall()
+    return render_template("index.html", login=True, user=session["user"], status=session["status"], gametype=session["gametype"], ulat=lat, ulon=lon, rad=radius, events=events)   
 
 
 @app.route("/create", methods=["POST"])
